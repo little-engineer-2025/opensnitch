@@ -1,3 +1,15 @@
 *.sock
 *.pyc
 *.profile
+
+# Ignore generated ebpf modules
+ebpf_prog/opensnitch-dns.o
+ebpf_prog/opensnitch-procs.o
+ebpf_prog/opensnitch.o
+
+# Ignore generated protobuf files
+daemon/ui/protocol/ui.pb.go
+daemon/ui/protocol/ui_grpc.pb.go
+
+# Ignore generated locale files
+ui/i18n/locales/**/opensnitch-*.ts
