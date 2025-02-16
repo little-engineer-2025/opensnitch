@@ -1,7 +1,10 @@
-all: protocol opensnitch_daemon gui
+all: protocol opensnitch_daemon gui ebpf-all
+
+ebpf-all:
+	@cd ebpf_prog && make all
 
 install:
-	@cd daemon && make install	
+	@cd daemon && make install
 	@cd ui && make install
 
 protocol:
@@ -17,11 +20,15 @@ clean:
 	@cd daemon && make clean
 	@cd proto && make clean
 	@cd ui && make clean
+	@cd ebpf_prog && make clean
 
 run:
 	cd ui && pip3 install --upgrade . && cd ..
 	opensnitch-ui --socket unix:///tmp/osui.sock &
 	./daemon/opensnitchd -rules-path /etc/opensnitchd/rules -ui-socket unix:///tmp/osui.sock -cpu-profile cpu.profile -mem-profile mem.profile
+
+run-gui:
+	opensnitch-ui --socket unix:///tmp/osui.sock
 
 test: 
 	clear 
@@ -38,7 +45,7 @@ adblocker:
 	clear
 	make 
 	clear
-	python make_ads_rules.py
+	python3 ./utils/legacy/make_ads_rules.py
 	clear
 	cd ui && pip3 install --upgrade . && cd ..
 	opensnitch-ui --socket unix:///tmp/osui.sock &
