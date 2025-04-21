@@ -3,6 +3,7 @@
 # On Debian based distros we need the following 2 directories.
 # Otherwise, just use the kernel headers from the kernel sources.
 #
+PREFIX?=/usr/local
 KERNEL_VER ?= $(shell ls -d /lib/modules/*/source | sort | tail -1 | cut -d/ -f4)
 KERNEL_DIR ?= /lib/modules/$(KERNEL_VER)/source
 KERNEL_HEADERS ?= /usr/src/linux-headers-$(KERNEL_VER)/
@@ -71,5 +72,11 @@ all: $(BIN)
 
 clean:
 	rm -f $(BIN)
+
+install:
+	@mkdir -p $(DESTDIR)$(PREFIX)/lib/opensnitchd/ebpf
+	@install -Dm644 opensnitch.o -t $(DESTDIR)$(PREFIX)/lib/opensnitchd/ebpf/
+	@install -Dm644 opensnitch-dns.o -t $(DESTDIR)$(PREFIX)/lib/opensnitchd/ebpf/
+	@install -Dm644 opensnitch-procs.o -t $(DESTDIR)$(PREFIX)/lib/opensnitchd/ebpf/
 
 .SUFFIXES:

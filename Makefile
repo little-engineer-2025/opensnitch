@@ -6,6 +6,7 @@ ebpf-all:
 install:
 	@cd daemon && make install
 	@cd ui && make install
+	@cd ebpf && make install
 
 protocol:
 	@cd proto && make
