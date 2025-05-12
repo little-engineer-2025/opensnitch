@@ -4,6 +4,7 @@ ebpf-all:
 	@cd ebpf_prog && make all
 
 install:
+	@opensnitchd --check-requirements
 	@cd daemon && make install
 	@cd ui && make install
 	@cd ebpf && make install
