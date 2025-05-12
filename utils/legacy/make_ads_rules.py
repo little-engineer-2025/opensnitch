@@ -16,10 +16,10 @@ lists = ( \
 domains = {}
 
 for url in lists:
-    print "Downloading %s ..." % url
+    print("Downloading {url} ...".format(url=url))
     r = requests.get(url)
     if r.status_code != 200:
-        print "Error, status code %d" % r.status_code
+        print("Error, status code {status}".format(status=r.status_code))
         continue
 
     for line in r.text.split("\n"):
@@ -41,13 +41,13 @@ for url in lists:
                 if part != "localhost":
                     domains[part] = 1
 
-print "Got %d unique domains, saving as rules to ./rules/ ..." % len(domains)
+print("Got {len_domains} unique domains, saving as rules to ./rules/ ...".format(len_domains=len(domains)))
 
 os.system("mkdir -p rules")
 
 idx = 0
 for domain, _ in domains.iteritems():
-    with open("rules/adv-%d.json" % idx, "wt") as fp:
+    with open("rules/adv-{}.json".format(idx), "wt") as fp:
         tpl = """
 {
    "created": "%s",
