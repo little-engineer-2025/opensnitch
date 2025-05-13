@@ -4,7 +4,7 @@
 # Otherwise, just use the kernel headers from the kernel sources.
 #
 PREFIX?=/usr/local
-KERNEL_VER ?= $(shell ls -d /lib/modules/*/source | sort | tail -1 | cut -d/ -f4)
+KERNEL_VER ?= $(shell uname -r)
 KERNEL_DIR ?= /lib/modules/$(KERNEL_VER)/source
 KERNEL_HEADERS ?= /usr/src/linux-headers-$(KERNEL_VER)/
 CC = clang
