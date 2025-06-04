@@ -12,7 +12,8 @@ import (
 	"github.com/evilsocket/opensnitch/daemon/firewall/config"
 	"github.com/evilsocket/opensnitch/daemon/log"
 	"github.com/evilsocket/opensnitch/daemon/ui/protocol"
-	"google.golang.org/protobuf/encoding/protojson"
+
+	jsonpb "google.golang.org/protobuf/encoding/protojson"
 )
 
 // Action is the modifier we apply to a rule.
@@ -167,22 +168,22 @@ func (ipt *Iptables) CleanRules(logErrors bool) {
 // Serialize converts the configuration from json to protobuf
 func (ipt *Iptables) Serialize() (*protocol.SysFirewall, error) {
 	sysfw := &protocol.SysFirewall{}
-	jun := protojson.UnmarshalOptions{
-		DiscardUnknown: false,
-	}
 	rawConfig, err := json.Marshal(&ipt.SysConfig)
 	if err != nil {
-		log.Error("nfables.Serialize() struct to string error: %s", err)
+		log.Error("nftables.Serialize() struct to string error: %s", err)
 		return nil, err
 	}
 	bytes, err := io.ReadAll(strings.NewReader(string(rawConfig)))
 	if err != nil {
-		log.Error("nfables.Serialize() Reading configuration error: %s", err)
+		log.Error("nftables.Serialize() Reading configuration error: %s", err)
 		return nil, err
 	}
-	// string to proto
+	jun := jsonpb.UnmarshalOptions{
+		DiscardUnknown: true,
+	}
 	if err := jun.Unmarshal(bytes, sysfw); err != nil {
-		log.Error("nfables.Serialize() string to protobuf error: %s", err)
+		log.Error("nftables.Serialize() string to protobuf error: %s", err)
+		log.Debug("%s", string(bytes))
 		return nil, err
 	}
 
@@ -191,15 +192,12 @@ func (ipt *Iptables) Serialize() (*protocol.SysFirewall, error) {
 
 // Deserialize converts a protocolbuffer structure to json.
 func (ipt *Iptables) Deserialize(sysfw *protocol.SysFirewall) ([]byte, error) {
-	jun := protojson.MarshalOptions{
-		UseProtoNames:     true,
-		EmitDefaultValues: false,
-		Indent:            "  ",
-	}
-
-	b, err := jun.Marshal(sysfw)
-	if err != nil {
-		log.Error("nfables.Deserialize() error 2: %s", err)
+	var (
+		b   []byte
+		err error
+	)
+	if b, err = jsonpb.Marshal(sysfw); err != nil {
+		log.Error("nftables.Deserialize() error 2: %s", err)
 		return nil, err
 	}
 	return b, nil

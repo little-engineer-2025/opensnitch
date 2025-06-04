@@ -2,8 +2,6 @@ package nftables
 
 import (
 	"encoding/json"
-	"io"
-	"strings"
 	"sync"
 
 	"github.com/evilsocket/opensnitch/daemon/firewall/common"
@@ -12,9 +10,8 @@ import (
 	"github.com/evilsocket/opensnitch/daemon/firewall/nftables/exprs"
 	"github.com/evilsocket/opensnitch/daemon/log"
 	"github.com/evilsocket/opensnitch/daemon/ui/protocol"
-	"google.golang.org/protobuf/encoding/protojson"
-
 	"github.com/google/nftables"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 // Action is the modifier we apply to a rule.
@@ -170,14 +167,9 @@ func (n *Nft) Serialize() (*protocol.SysFirewall, error) {
 		log.Error("nftables.Serialize() struct to string error: %s", err)
 		return nil, err
 	}
-	// string to proto
-	b, err := io.ReadAll(strings.NewReader(string(rawConfig)))
-	if err != nil {
-		log.Error("nftables.reading configuration error: %s", err)
-		return nil, err
-	}
-	if err := jun.Unmarshal(b, sysfw); err != nil {
+	if err := jun.Unmarshal(rawConfig, sysfw); err != nil {
 		log.Error("nftables.Serialize() string to protobuf error: %s", err)
+		log.Debug("%s", string(rawConfig))
 		return nil, err
 	}
 
@@ -187,9 +179,9 @@ func (n *Nft) Serialize() (*protocol.SysFirewall, error) {
 // Deserialize converts a protocolbuffer structure to byte array.
 func (n *Nft) Deserialize(sysfw *protocol.SysFirewall) ([]byte, error) {
 	jun := protojson.MarshalOptions{
-		UseProtoNames:     true,
-		EmitDefaultValues: true,
-		Indent:            "  ",
+		UseProtoNames:   true,
+		Indent:          "  ",
+		EmitUnpopulated: true,
 	}
 
 	// NOTE: '<' and '>' characters are encoded to unicode (\u003c).
