@@ -34,7 +34,7 @@ func (n *Nft) AreRulesLoaded() bool {
 				}
 				nRules++
 				if c.Table.Name == exprs.NFT_CHAIN_MANGLE && rdx < len(rules)-2 {
-					log.Warning("nfables queue rule is not the latest of the list (%d/%d), reloading", rdx, len(rules))
+					log.Warning("nftables queue rule is not the latest of the list (%d/%d), reloading", rdx, len(rules))
 					return false
 				}
 			}
@@ -43,7 +43,7 @@ func (n *Nft) AreRulesLoaded() bool {
 	// we expect to have exactly 3 rules (2 queue and 1 dns). If there're less or more, then we
 	// need to reload them.
 	if nRules != 3 {
-		log.Warning("nfables filter rules not loaded: %d", nRules)
+		log.Warning("nftables filter rules not loaded: %d", nRules)
 		return false
 	}
 
