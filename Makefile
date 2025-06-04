@@ -7,7 +7,7 @@ install:
 	@opensnitchd --check-requirements
 	@cd daemon && make install
 	@cd ui && make install
-	@cd ebpf && make install
+	@cd ebpf_prog && make install
 
 protocol:
 	@cd proto && make
