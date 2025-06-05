@@ -90,7 +90,7 @@ func findLibc() (string, error) {
 	ret := C.find_libc()
 
 	if ret == nil {
-		return "", errors.New("Could not find path to libc.so")
+		return "", errors.New("could not find path to libc.so")
 	}
 	str := C.GoString(ret)
 
@@ -108,7 +108,7 @@ func lookupSymbol(elffile *elf.File, symbolName string) (uint64, error) {
 			return symb.Value, nil
 		}
 	}
-	return 0, fmt.Errorf("Symbol: '%s' not found", symbolName)
+	return 0, fmt.Errorf("symbol: '%s' not found", symbolName)
 }
 
 // ListenerEbpf starts listening for DNS events.
@@ -180,7 +180,7 @@ func ListenerEbpf(ebpfModPath string) error {
 
 	if probesAttached == 0 {
 		log.Warning("[eBPF DNS]: Failed to attach uprobes.")
-		return errors.New("Failed to attach uprobes")
+		return errors.New("failed to attach uprobes")
 	}
 
 	// --------------
