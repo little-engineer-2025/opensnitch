@@ -17,3 +17,8 @@ ui/i18n/locales/**/opensnitch-*.ts
 # Ignore coverage backend generated data
 daemon/coverage.out
 daemon/coverage.out.tmp
+
+# Ignore generated .qm files
+# see: https://doc.qt.io/qt-6/localization.html
+ui/i18n/locales/**/*.qm
+ui/opensnitch/i18n
