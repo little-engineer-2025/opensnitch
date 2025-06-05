@@ -42,16 +42,26 @@ type (
 
 // ErrorsChan returns the channel where the errors are sent to.
 func (c *Common) ErrorsChan() <-chan string {
-	return c.ErrChan
+	if c == nil {
+		return c.ErrChan
+	}
+	return nil
 }
 
 // ErrChanEmpty checks if the errors channel is empty.
 func (c *Common) ErrChanEmpty() bool {
-	return len(c.ErrChan) == 0
+	if c == nil {
+		return len(c.ErrChan) == 0
+	}
+	return false
 }
 
 // SendError sends an error to the channel of errors.
 func (c *Common) SendError(err string) {
+	if c == nil {
+		log.Error("SendError: c is nil")
+		return
+	}
 	log.Warning("%s", err)
 
 	if len(c.ErrChan) >= cap(c.ErrChan) {
@@ -72,6 +82,10 @@ func (c *Common) SendError(err string) {
 }
 
 func (c *Common) SetRulesCheckerInterval(interval string) {
+	if c == nil {
+		log.Error("SetRulesCheckerInterval: c is nil")
+		return
+	}
 	dur, err := time.ParseDuration(interval)
 	if err != nil {
 		log.Warning("Invalid rules checker interval (falling back to %s): %s", DefaultCheckInterval, err)
@@ -85,6 +99,10 @@ func (c *Common) SetRulesCheckerInterval(interval string) {
 // SetQueueNum sets the queue number used by the firewall.
 // It's the queue where all intercepted connections will be sent.
 func (c *Common) SetQueueNum(qNum uint16) {
+	if c == nil {
+		log.Error("SetQueueNum: c is nil")
+		return
+	}
 	c.Lock()
 	defer c.Unlock()
 	c.QueueNum = qNum
@@ -92,32 +110,45 @@ func (c *Common) SetQueueNum(qNum uint16) {
 
 // IsRunning returns if the firewall is running or not.
 func (c *Common) IsRunning() bool {
-	c.RLock()
-	defer c.RUnlock()
+	if c != nil {
+		c.RLock()
+		defer c.RUnlock()
 
-	return c != nil && c.Running
+		return c.Running
+	}
+	return false
 }
 
 // IsFirewallEnabled returns if the firewall is running or not.
 func (c *Common) IsFirewallEnabled() bool {
-	c.RLock()
-	defer c.RUnlock()
+	if c != nil {
+		c.RLock()
+		defer c.RUnlock()
 
-	return c != nil && c.FwEnabled
+		return c.FwEnabled
+	}
+	return false
 }
 
 // IsIntercepting returns if the firewall is running or not.
 func (c *Common) IsIntercepting() bool {
-	c.RLock()
-	defer c.RUnlock()
+	if c != nil {
+		c.RLock()
+		defer c.RUnlock()
 
-	return c != nil && c.Intercepting
+		return c.Intercepting
+	}
+	return false
 }
 
 // NewRulesChecker starts monitoring interception rules.
 // We expect to have 2 rules loaded: one to intercept DNS responses and another one
 // to intercept network traffic.
 func (c *Common) NewRulesChecker(areRulesLoaded callbackBool, reloadRules callback) {
+	if c == nil {
+		log.Error("NewRulesChecker: c is nil")
+		return
+	}
 	c.Lock()
 	defer c.Unlock()
 	if c.RulesCheckInterval.String() == RulesCheckerDisabled {
@@ -181,6 +212,11 @@ func (c *Common) StopCheckingRules() {
 	}
 }
 
+// FIXME Not used
 func (c *Common) reloadCallback(callback func()) {
+	if c == nil {
+		log.Error("reloadCallback: c is nil")
+		return
+	}
 	callback()
 }
