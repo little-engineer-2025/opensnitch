@@ -237,7 +237,6 @@ func ListenerEbpf(ebpfModPath string) error {
 		syscall.SIGHUP,
 		syscall.SIGINT,
 		syscall.SIGTERM,
-		syscall.SIGKILL,
 		syscall.SIGQUIT)
 
 	<-sig
