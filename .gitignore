@@ -13,3 +13,7 @@ daemon/ui/protocol/ui_grpc.pb.go
 
 # Ignore generated locale files
 ui/i18n/locales/**/opensnitch-*.ts
+
+# Ignore coverage backend generated data
+daemon/coverage.out
+daemon/coverage.out.tmp

@@ -2,8 +2,10 @@
 SRC := $(shell find . -type f -name '*.go' -o -name '*.h' -o -name '*.c')
 PREFIX?=/usr/local
 
+.PHONY: all
 all: opensnitchd
 
+.PHONY: install
 install:
 	@mkdir -p $(DESTDIR)/etc/opensnitchd/rules
 	@install -Dm755 opensnitchd \
@@ -20,9 +22,20 @@ install:
 
 opensnitchd: $(SRC)
 	@go get
-	@go build -o opensnitchd . 
+	@go build -o opensnitchd .
 
+.PHONY: clean
 clean:
 	@rm -rf opensnitchd
 
+.PHONY: test
+test:
+	go test -parallel 4 -coverprofile="coverage.out.tmp" -covermode count $(shell go list ./...)
+	grep -v -e '.pb.go' coverage.out.tmp > coverage.out
+	rm coverage.out.tmp
 
+coverage.out: test
+
+.PHONY: coverage
+coverage: coverage.out
+	go tool cover -func ./coverage.out
