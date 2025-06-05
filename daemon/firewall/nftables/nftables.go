@@ -179,9 +179,9 @@ func (n *Nft) Serialize() (*protocol.SysFirewall, error) {
 // Deserialize converts a protocolbuffer structure to byte array.
 func (n *Nft) Deserialize(sysfw *protocol.SysFirewall) ([]byte, error) {
 	jun := protojson.MarshalOptions{
-		UseProtoNames:   true,
-		Indent:          "  ",
-		EmitUnpopulated: true,
+		UseProtoNames:     true,
+		EmitDefaultValues: true,
+		Indent:            "  ",
 	}
 
 	// NOTE: '<' and '>' characters are encoded to unicode (\u003c).
