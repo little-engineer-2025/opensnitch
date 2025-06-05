@@ -96,7 +96,7 @@ var (
 	pktChan       = (<-chan netfilter.Packet)(nil)
 	wrkChan       = (chan netfilter.Packet)(nil)
 	sigChan       = (chan os.Signal)(nil)
-	exitChan      = (chan bool)(nil)
+	// exitChan      = (chan bool)(nil)  // not used
 	loggerMgr     *loggers.LoggerManager
 	resolvMonitor *systemd.ResolvedMonitor
 )
@@ -133,16 +133,16 @@ func init() {
 // This configuration will be loaded again by uiClient(), in order to monitor it for changes.
 func loadDiskConfiguration() (*config.Config, error) {
 	if configFile == "" {
-		return nil, fmt.Errorf("Configuration file cannot be empty")
+		return nil, fmt.Errorf("configuration file cannot be empty")
 	}
 
 	raw, err := config.Load(configFile)
 	if err != nil || len(raw) == 0 {
-		return nil, fmt.Errorf("Error loading configuration %s: %s", configFile, err)
+		return nil, fmt.Errorf("error loading configuration %s: %s", configFile, err)
 	}
 	clientConfig, err := config.Parse(raw)
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing configuration %s: %s", configFile, err)
+		return nil, fmt.Errorf("error parsing configuration %s: %s", configFile, err)
 	}
 
 	log.Info("Loading configuration file %s ...", configFile)
@@ -251,12 +251,14 @@ func setupProfiling() {
 
 func setupSignals() {
 	sigChan = make(chan os.Signal, 1)
-	exitChan = make(chan bool, workers+1)
-	signal.Notify(sigChan,
+	// exitChan = make(chan bool, workers+1)  // not used
+	signalSet := []os.Signal{
 		syscall.SIGHUP,
 		syscall.SIGINT,
 		syscall.SIGTERM,
-		syscall.SIGQUIT)
+		syscall.SIGQUIT,
+	}
+	signal.Notify(sigChan, signalSet...)
 	go func() {
 		sig := <-sigChan
 		log.Raw("\n")
@@ -271,7 +273,7 @@ func setupSignals() {
 
 func worker(id int) {
 	log.Debug("Worker #%d started.", id)
-	for true {
+	for {
 		select {
 		case <-ctx.Done():
 			goto Exit
@@ -401,7 +403,7 @@ func doCleanup(queue, repeatQueue *netfilter.Queue) {
 
 func onPacket(packet netfilter.Packet) {
 	// DNS response, just parse, track and accept.
-	if dns.TrackAnswers(packet.Packet) == true {
+	if dns.TrackAnswers(packet.Packet) {
 		packet.SetVerdictAndMark(netfilter.NF_ACCEPT, packet.Mark)
 		stats.OnDNSResponse()
 		return
@@ -451,7 +453,7 @@ func acceptOrDeny(packet *netfilter.Packet, con *conman.Connection) *rule.Rule {
 
 		// send a request to the UI client if
 		// 1) connected and running and 2) we are not already asking
-		if uiClient.Connected() == false || uiClient.GetIsAsking() == true {
+		if !uiClient.Connected() || uiClient.GetIsAsking() {
 			applyDefaultAction(packet, con)
 			log.Debug("UI is not running or busy, connected: %v, running: %v", uiClient.Connected(), uiClient.GetIsAsking())
 			return nil
@@ -535,7 +537,7 @@ func acceptOrDeny(packet *netfilter.Packet, con *conman.Connection) *rule.Rule {
 		return r
 	}
 
-	if r.Enabled == false {
+	if !r.Enabled {
 		applyDefaultAction(packet, con)
 		ruleName := log.Green(r.Name)
 		log.Info("DISABLED (%s) %s %s -> %s:%d (%s)", uiClient.DefaultAction(), log.Bold(log.Green("✔")), log.Bold(con.Process.Path), log.Bold(con.To()), con.DstPort, ruleName)
