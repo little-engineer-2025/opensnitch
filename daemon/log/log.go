@@ -45,7 +45,6 @@ const (
 	TRACE = -1
 )
 
-//
 var (
 	WithColors = true
 	Output     = os.Stdout
@@ -78,7 +77,7 @@ var (
 
 // Wrap wraps a text with effects
 func Wrap(s, effect string) string {
-	if WithColors == true {
+	if WithColors {
 		s = effect + s + RESET
 	}
 	return s
@@ -132,7 +131,6 @@ func SetLogLevel(newLevel int) {
 func GetLogLevel() int {
 	mutex.RLock()
 	defer mutex.RUnlock()
-
 	return MinLevel
 }
 
@@ -147,7 +145,6 @@ func SetLogUTC(newLogUTC bool) {
 func GetLogUTC() bool {
 	mutex.RLock()
 	defer mutex.RUnlock()
-
 	return LogUTC
 }
 
@@ -162,7 +159,6 @@ func SetLogMicro(newLogMicro bool) {
 func GetLogMicro() bool {
 	mutex.Lock()
 	defer mutex.Unlock()
-
 	return LogMicro
 }
 
@@ -197,8 +193,8 @@ func Log(level int, format string, args ...interface{}) {
 
 func setDefaultLogOutput() {
 	mutex.Lock()
+	defer mutex.Unlock()
 	Output = os.Stdout
-	mutex.Unlock()
 }
 
 // OpenFile opens a file to print out the logs
