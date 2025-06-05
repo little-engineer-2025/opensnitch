@@ -27,7 +27,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	golog "log"
 	"net"
 	"os"
@@ -194,7 +194,7 @@ func setupQueues(qNum uint16) {
 }
 
 func setupLogging() {
-	golog.SetOutput(ioutil.Discard)
+	golog.SetOutput(io.Discard)
 	if debug {
 		log.SetLogLevel(log.DEBUG)
 	} else if warning {
