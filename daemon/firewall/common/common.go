@@ -183,7 +183,7 @@ func startCheckingRules(exitChan <-chan struct{}, rulesChecker *time.Ticker, are
 				goto Exit
 			}
 
-			if areRulesLoaded() == false {
+			if !areRulesLoaded() {
 				reloadRules()
 			}
 		}
