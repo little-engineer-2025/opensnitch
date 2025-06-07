@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 
@@ -18,13 +18,13 @@ var (
 
 // GetHostname returns the name of the host where the daemon is running.
 func GetHostname() string {
-	hostname, _ := ioutil.ReadFile("/proc/sys/kernel/hostname")
+	hostname, _ := os.ReadFile("/proc/sys/kernel/hostname")
 	return strings.Replace(string(hostname), "\n", "", -1)
 }
 
 // GetKernelVersion returns the kernel version.
 func GetKernelVersion() string {
-	version, _ := ioutil.ReadFile("/proc/sys/kernel/osrelease")
+	version, _ := os.ReadFile("/proc/sys/kernel/osrelease")
 	return strings.Replace(string(version), "\n", "", -1)
 }
 
@@ -62,7 +62,7 @@ func CheckSysRequirements() {
 		if confFile[len(confFile)-2:] == "gz" {
 			fileContent, err = ReadGzipFile(confFile)
 		} else {
-			fileContent, err = ioutil.ReadFile(confFile)
+			fileContent, err = os.ReadFile(confFile)
 		}
 		if err == nil {
 			break
