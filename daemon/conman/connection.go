@@ -54,7 +54,7 @@ func Parse(nfp netfilter.Packet, interceptUnknown bool) *Connection {
 		return con
 	}
 
-	if core.IPv6Enabled == false {
+	if !core.IPv6Enabled {
 		return nil
 	}
 	con, err := NewConnection6(&nfp)
@@ -70,7 +70,7 @@ func Parse(nfp netfilter.Packet, interceptUnknown bool) *Connection {
 
 func newConnectionImpl(nfp *netfilter.Packet, c *Connection, protoType string) (cr *Connection, err error) {
 	// no errors but not enough info neither
-	if c.parseDirection(protoType) == false {
+	if !c.parseDirection(protoType) {
 		log.Trace("discarding connection (proto %s): %+v", protoType, c)
 		return nil, nil
 	}
@@ -166,7 +166,7 @@ func newConnectionImpl(nfp *netfilter.Packet, c *Connection, protoType string) (
 
 	if c.Process == nil {
 		if c.Process = procmon.FindProcess(pid, showUnknownCons); c.Process == nil {
-			return nil, fmt.Errorf("Could not find process by its pid %d for: %s", pid, c)
+			return nil, fmt.Errorf("could not find process by its pid %d for: %s", pid, c)
 		}
 	}
 
@@ -177,11 +177,11 @@ func newConnectionImpl(nfp *netfilter.Packet, c *Connection, protoType string) (
 func NewConnection(nfp *netfilter.Packet) (c *Connection, err error) {
 	ipv4 := nfp.Packet.Layer(layers.LayerTypeIPv4)
 	if ipv4 == nil {
-		return nil, errors.New("Error getting IPv4 layer")
+		return nil, errors.New("error getting IPv4 layer")
 	}
 	ip, ok := ipv4.(*layers.IPv4)
 	if !ok {
-		return nil, errors.New("Error getting IPv4 layer data")
+		return nil, errors.New("error getting IPv4 layer data")
 	}
 	c = &Connection{
 		SrcIP:   ip.SrcIP,
@@ -197,11 +197,11 @@ func NewConnection(nfp *netfilter.Packet) (c *Connection, err error) {
 func NewConnection6(nfp *netfilter.Packet) (c *Connection, err error) {
 	ipv6 := nfp.Packet.Layer(layers.LayerTypeIPv6)
 	if ipv6 == nil {
-		return nil, errors.New("Error getting IPv6 layer")
+		return nil, errors.New("error getting IPv6 layer")
 	}
 	ip, ok := ipv6.(*layers.IPv6)
 	if !ok {
-		return nil, errors.New("Error getting IPv6 layer data")
+		return nil, errors.New("error getting IPv6 layer data")
 	}
 	c = &Connection{
 		SrcIP:   ip.SrcIP,
@@ -215,7 +215,7 @@ func NewConnection6(nfp *netfilter.Packet) (c *Connection, err error) {
 func (c *Connection) parseDirection(protoType string) bool {
 	ret := false
 	if tcpLayer := c.Pkt.Packet.Layer(layers.LayerTypeTCP); tcpLayer != nil {
-		if tcp, ok := tcpLayer.(*layers.TCP); ok == true && tcp != nil {
+		if tcp, ok := tcpLayer.(*layers.TCP); ok && tcp != nil {
 			c.Protocol = "tcp" + protoType
 			c.DstPort = uint(tcp.DstPort)
 			c.SrcPort = uint(tcp.SrcPort)
@@ -226,7 +226,7 @@ func (c *Connection) parseDirection(protoType string) bool {
 			}
 		}
 	} else if udpLayer := c.Pkt.Packet.Layer(layers.LayerTypeUDP); udpLayer != nil {
-		if udp, ok := udpLayer.(*layers.UDP); ok == true && udp != nil {
+		if udp, ok := udpLayer.(*layers.UDP); ok && udp != nil {
 			c.Protocol = "udp" + protoType
 			c.DstPort = uint(udp.DstPort)
 			c.SrcPort = uint(udp.SrcPort)
@@ -237,28 +237,28 @@ func (c *Connection) parseDirection(protoType string) bool {
 			}
 		}
 	} else if udpliteLayer := c.Pkt.Packet.Layer(layers.LayerTypeUDPLite); udpliteLayer != nil {
-		if udplite, ok := udpliteLayer.(*layers.UDPLite); ok == true && udplite != nil {
+		if udplite, ok := udpliteLayer.(*layers.UDPLite); ok && udplite != nil {
 			c.Protocol = "udplite" + protoType
 			c.DstPort = uint(udplite.DstPort)
 			c.SrcPort = uint(udplite.SrcPort)
 			ret = true
 		}
 	} else if sctpLayer := c.Pkt.Packet.Layer(layers.LayerTypeSCTP); sctpLayer != nil {
-		if sctp, ok := sctpLayer.(*layers.SCTP); ok == true && sctp != nil {
+		if sctp, ok := sctpLayer.(*layers.SCTP); ok && sctp != nil {
 			c.Protocol = "sctp" + protoType
 			c.DstPort = uint(sctp.DstPort)
 			c.SrcPort = uint(sctp.SrcPort)
 			ret = true
 		}
 	} else if icmpLayer := c.Pkt.Packet.Layer(layers.LayerTypeICMPv4); icmpLayer != nil {
-		if icmp, ok := icmpLayer.(*layers.ICMPv4); ok == true && icmp != nil {
+		if icmp, ok := icmpLayer.(*layers.ICMPv4); ok && icmp != nil {
 			c.Protocol = "icmp"
 			c.DstPort = 0
 			c.SrcPort = 0
 			ret = true
 		}
 	} else if icmp6Layer := c.Pkt.Packet.Layer(layers.LayerTypeICMPv6); icmp6Layer != nil {
-		if icmp6, ok := icmp6Layer.(*layers.ICMPv6); ok == true && icmp6 != nil {
+		if icmp6, ok := icmp6Layer.(*layers.ICMPv6); ok && icmp6 != nil {
 			c.Protocol = "icmp" + protoType
 			c.DstPort = 0
 			c.SrcPort = 0
