@@ -372,7 +372,6 @@ REDIRECIONAMENTO, TPROXY, DNAT, SNAT, MASCARADO:
     <message>
         <location filename="../../../opensnitch/res/prompt.ui" line="129"/>
         <source>12h</source>
-        <translatorcomment>12h</translatorcomment>
         <translation></translation>
     </message>
     <message>
@@ -2516,7 +2515,7 @@ Comentários são bem-vindos</translation>
     <message>
         <location filename="../../../opensnitch/dialogs/firewall.py" line="314"/>
         <source>In order to configure firewall rules from the GUI, we need to use &apos;nftables&apos; instead of &apos;iptables&apos;</source>
-        <translation>Para configurar regras de firewall a partir da GUI, precisamos usar &apos;nftables&apos; em vez de &apos;iptables&apos;</translation>
+        <translation>Para configurar regras de firewall a partir da GUI, precisamos usar 'nftables' em vez de 'iptables'</translation>
     </message>
     <message>
         <location filename="../../../opensnitch/dialogs/firewall.py" line="329"/>
@@ -2613,7 +2612,7 @@ Comentários são bem-vindos</translation>
     <message>
         <location filename="../../../opensnitch/dialogs/firewall_rule.py" line="450"/>
         <source>You can use &apos;,&apos; or &apos;-&apos; to specify multiple ports/IPs or ranges/values:&lt;br&gt;&lt;br&gt;ports: 22 or 22,443 or 50000-60000&lt;br&gt;IPs: 192.168.1.1 or 192.168.1.30-192.168.1.130&lt;br&gt;Values: echo-reply,echo-request&lt;br&gt;Values: new,established,related</source>
-        <translation>Você pode usar &apos;,&apos; ou &apos;-&apos; para especificar várias portas/IPs ou intervalos/valores:&lt;br&gt;&lt;br&gt;ports: 22 ou 22,443 ou 50000-60000&lt;br&gt;IPs: 192.168.1.1 ou 192.168.1.30-192.168.1.130&lt;br&gt;Valores: eco-resposta,eco-pedido&lt;br&gt;Valores: novo,estabelecido,relacionado</translation>
+        <translation>Você pode usar ',' ou '-' para especificar várias portas/IPs ou intervalos/valores:&lt;br&gt;&lt;br&gt;ports: 22 ou 22,443 ou 50000-60000&lt;br&gt;IPs: 192.168.1.1 ou 192.168.1.30-192.168.1.130&lt;br&gt;Valores: eco-resposta,eco-pedido&lt;br&gt;Valores: novo,estabelecido,relacionado</translation>
     </message>
     <message>
         <location filename="../../../opensnitch/dialogs/firewall_rule.py" line="470"/>
@@ -3058,47 +3057,47 @@ O valor deve estar no formato: VALOR/UNIDADES, por exemplo:
         <translation type="obsolete">Processo desconhecido</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="412"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="429"/>
         <source>Outgoing connection</source>
         <translation>Conexão de saída</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="419"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="436"/>
         <source>Process launched from:</source>
         <translation>Processo lançado de:</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="505"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="522"/>
         <source>from this executable</source>
         <translation>a partir deste executável</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="509"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="526"/>
         <source>from this command line</source>
         <translation>a partir desta linha de comando</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="511"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="528"/>
         <source>to port {0}</source>
         <translation>para a porta {0}</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="550"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="567"/>
         <source>to {0}</source>
         <translation>para {0}</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="514"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="531"/>
         <source>from user {0}</source>
         <translation>do usuário {0}</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="527"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="544"/>
         <source>to {0}.*</source>
         <translation>para {0}.*</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="560"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="577"/>
         <source>to *.{0}</source>
         <translation>para *.{0}</translation>
     </message>
@@ -3110,20 +3109,20 @@ O valor deve estar no formato: VALOR/UNIDADES, por exemplo:
     <message>
         <location filename="../../../opensnitch/dialogs/prompt/_utils.py" line="38"/>
         <source>&lt;b&gt;Remote&lt;/b&gt; process %s running on &lt;b&gt;%s&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Processo remoto&lt;/b&gt; %s rodando em &lt;b&gt;%s&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;Processo remoto&lt;/b&gt; %s rodando em &lt;b&gt;%s&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/_utils.py" line="42"/>
+        <location filename="../../../opensnitch/notifications.py" line="114"/>
         <source>is connecting to &lt;b&gt;%s&lt;/b&gt; on %s port %d</source>
         <translation>está conectando a &lt;b&gt;%s&lt;/b&gt; em %s na porta %d</translation>
     </message>
     <message>
         <location filename="../../../opensnitch/dialogs/prompt/_utils.py" line="54"/>
         <source>is attempting to resolve &lt;b&gt;%s&lt;/b&gt; via %s, %s port %d</source>
-        <translation>está tentando resolver &lt;b&gt;%s&lt;/b&gt; via %s, %s porta %d</translation>
+        <translation type="obsolete">está tentando resolver &lt;b&gt;%s&lt;/b&gt; via %s, %s porta %d</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="518"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="535"/>
         <source>from this PID</source>
         <translation>a partir desse PID</translation>
     </message>
@@ -3140,7 +3139,7 @@ O valor deve estar no formato: VALOR/UNIDADES, por exemplo:
     <message>
         <location filename="../../../opensnitch/dialogs/prompt/_utils.py" line="49"/>
         <source>is connecting to &lt;b&gt;%s&lt;/b&gt;, %s</source>
-        <translation>está se conectando a &lt;b&gt;%s&lt;/b&gt;, %s</translation>
+        <translation type="obsolete">está se conectando a &lt;b&gt;%s&lt;/b&gt;, %s</translation>
     </message>
     <message>
         <location filename="../../../opensnitch/notifications.py" line="40"/>
@@ -3155,10 +3154,10 @@ O valor deve estar no formato: VALOR/UNIDADES, por exemplo:
     <message>
         <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="323"/>
         <source>WARNING, bad checksum (&lt;a href=&apos;#&apos;&gt;More info&lt;/a&gt;)</source>
-        <translation type="obsolete">AVISO, soma de verificação incorreta (&lt;a href=&apos;#&apos;&gt;Mais informações&lt;/a&gt;)</translation>
+        <translation type="obsolete">AVISO, soma de verificação incorreta (&lt;a href='#'&gt;Mais informações&lt;/a&gt;)</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="535"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="552"/>
         <source>from {0}*/{1}</source>
         <translation>de {0}*/{1}</translation>
     </message>
@@ -3173,12 +3172,12 @@ O valor deve estar no formato: VALOR/UNIDADES, por exemplo:
         <translation type="obsolete">Regra não atualizada.</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="371"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="388"/>
         <source>WARNING, bad checksum (&lt;a href=&apos;#warning-checksum&apos;&gt;More info&lt;/a&gt;)</source>
-        <translation>AVISO, soma de verificação incorreta (&lt;a href=&apos;#warning-checksum&apos;&gt;Mais informações&lt;/a&gt;)</translation>
+        <translation>AVISO, soma de verificação incorreta (&lt;a href='#warning-checksum'&gt;Mais informações&lt;/a&gt;)</translation>
     </message>
     <message>
-        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="543"/>
+        <location filename="../../../opensnitch/dialogs/prompt/__init__.py" line="560"/>
         <source>to {alias}</source>
         <translation>para {alias}</translation>
     </message>
