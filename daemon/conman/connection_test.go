@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/evilsocket/opensnitch/daemon/netfilter"
 )
@@ -124,4 +125,13 @@ func TestParseUDPDirection(t *testing.T) {
 		t.Error("parseDirection() Protocol mismatch:", c)
 		t.Fail()
 	}
+}
+
+func TestParse(t *testing.T) {
+	assert.NotNil(t, Parse(netfilter.Packet{NetworkProtocol: netfilter.IPv4, Packet: NewTCPPacket()}, true))
+}
+
+func TestSerialize(t *testing.T) {
+	sut := &Connection{}
+	sut.Serialize()
 }
