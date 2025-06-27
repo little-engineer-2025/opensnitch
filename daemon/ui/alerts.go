@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/evilsocket/opensnitch/daemon/conman"
@@ -35,21 +36,23 @@ func NewAlert(atype protocol.Alert_Type, what protocol.Alert_What, action protoc
 	switch what {
 	case protocol.Alert_KERNEL_EVENT:
 
-		switch data.(type) {
+		switch data := data.(type) {
 		case procmon.Process:
 			a.Data = &protocol.Alert_Proc{
-				data.(*procmon.Process).Serialize(),
+				Proc: data.Serialize(),
 			}
 		case string:
-			a.Data = &protocol.Alert_Text{data.(string)}
+			a.Data = &protocol.Alert_Text{Text: data}
 			a.Action = protocol.Alert_SHOW_ALERT
 		}
 	case protocol.Alert_CONNECTION:
 		a.Data = &protocol.Alert_Conn{
-			data.(*conman.Connection).Serialize(),
+			Conn: data.(*conman.Connection).Serialize(),
 		}
 	case protocol.Alert_GENERIC:
-		a.Data = &protocol.Alert_Text{data.(string)}
+		a.Data = &protocol.Alert_Text{Text: data.(string)}
+	default:
+		log.Important(fmt.Sprintf("unexpected protocol.Alert_What: %#v", what))
 	}
 
 	return a
@@ -78,7 +81,10 @@ func (c *Client) alertsDispatcher() {
 
 	isQueueFull := func(qdAlerts chan protocol.Alert) bool { return len(qdAlerts) > 31 }
 	isQueueEmpty := func(qdAlerts chan protocol.Alert) bool { return len(qdAlerts) == 0 }
-	queueAlert := func(qdAlerts chan protocol.Alert, pbAlert protocol.Alert) {
+	queueAlert := func(
+		qdAlerts chan protocol.Alert,
+		pbAlert protocol.Alert,
+	) {
 		if isQueueFull(qdAlerts) {
 			v := <-qdAlerts
 			// empty queue before adding a new one

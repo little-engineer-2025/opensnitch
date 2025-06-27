@@ -11,16 +11,17 @@ import (
 )
 
 var (
-	lock             = sync.RWMutex{}
-	monitorMethod    = MethodProc
 	Ctx, CancelTasks = context.WithCancel(context.Background())
 )
 
+type Method string
+
 // monitor method supported types
 const (
-	MethodProc  = "proc"
-	MethodAudit = "audit"
-	MethodEbpf  = "ebpf"
+	MethodProc  Method = "proc"
+	MethodAudit Method = "audit"
+	MethodEbpf  Method = "ebpf"
+	MethodNone  Method = ""
 
 	KernelConnection = "Kernel connection"
 	ProcPrefix       = "/proc"
@@ -121,6 +122,19 @@ type Process struct {
 	UID       int
 }
 
+func StringToMethod(methodProc string) Method {
+	switch methodProc {
+	case string(MethodAudit):
+		return MethodAudit
+	case string(MethodEbpf):
+		return MethodEbpf
+	case string(MethodProc):
+		return MethodProc
+	default:
+		return MethodNone
+	}
+}
+
 // NewProcessEmpty returns a new Process struct with no details.
 func NewProcessEmpty(pid int, comm string) *Process {
 	p := &Process{
@@ -201,7 +215,7 @@ func (p *Process) RUnlock() {
 	p.mu.RUnlock()
 }
 
-//Serialize transforms a Process object to gRPC protocol object
+// Serialize transforms a Process object to gRPC protocol object
 func (p *Process) Serialize() *protocol.Process {
 	ioStats := p.IOStats
 	netStats := p.NetStats
@@ -230,41 +244,104 @@ func (p *Process) Serialize() *protocol.Process {
 	}
 }
 
-// SetMonitorMethod configures a new method for parsing connections.
-func SetMonitorMethod(newMonitorMethod string) {
-	lock.Lock()
-	defer lock.Unlock()
+type IProcMonStatus interface {
+	SetMonitorMethod(newMonitorMethod Method)
+	GetMonitorMethod() Method
+	MethodIsEbpf() bool
+	MethodIsAudit() bool
+	MethodIsProc() bool
+}
 
-	monitorMethod = newMonitorMethod
+type ProcMonStatus struct {
+	lock          sync.RWMutex
+	monitorMethod Method
+}
+
+func NewProcMonStatus(monitorMethod Method) IProcMonStatus {
+	return &ProcMonStatus{
+		lock:          sync.RWMutex{},
+		monitorMethod: monitorMethod,
+	}
+}
+
+var defaultProcMonStatus IProcMonStatus = NewProcMonStatus(MethodProc)
+
+// SetMonitorMethod configures a new method for parsing connections.
+func (p *ProcMonStatus) SetMonitorMethod(newMonitorMethod Method) {
+	if p == nil {
+		panic("procmon: ProcMonStatus: SetMonitorMethod: p is nil")
+	}
+	p.lock.Lock()
+	defer p.lock.Unlock()
+
+	p.monitorMethod = newMonitorMethod
 }
 
 // GetMonitorMethod configures a new method for parsing connections.
-func GetMonitorMethod() string {
-	lock.RLock()
-	defer lock.RUnlock()
+func (p *ProcMonStatus) GetMonitorMethod() Method {
+	if p == nil {
+		panic("procmon: ProcMonStatus: GetMonitorMethod: p is nil")
+	}
+	p.lock.Lock()
+	defer p.lock.Unlock()
 
-	return monitorMethod
+	return p.monitorMethod
+}
+
+// MethodIsEbpf returns if the process monitor method is eBPF.
+func (p *ProcMonStatus) MethodIsEbpf() bool {
+	if p == nil {
+		panic("procmon: ProcMonStatus: MethodIsEbpf: p is nil")
+	}
+	p.lock.Lock()
+	defer p.lock.Unlock()
+
+	return p.monitorMethod == MethodEbpf
+}
+
+// MethodIsAudit returns if the process monitor method is eBPF.
+func (p *ProcMonStatus) MethodIsAudit() bool {
+	if p == nil {
+		panic("procmon: ProcMonStatus: MethodIsAudit: p is nil")
+	}
+	p.lock.Lock()
+	defer p.lock.Unlock()
+
+	return p.monitorMethod == MethodAudit
+}
+
+// MethodIsProc returns if the process monitor method is proc.
+func (p *ProcMonStatus) MethodIsProc() bool {
+	if p == nil {
+		panic("procmon: ProcMonStatus: MethodIsProc: p is nil")
+	}
+	p.lock.Lock()
+	defer p.lock.Unlock()
+
+	return p.monitorMethod == MethodProc
+}
+
+// SetMonitorMethod configures a new method for parsing connections.
+func SetMonitorMethod(newMonitorMethod Method) {
+	defaultProcMonStatus.SetMonitorMethod(newMonitorMethod)
+}
+
+// GetMonitorMethod configures a new method for parsing connections.
+func GetMonitorMethod() Method {
+	return defaultProcMonStatus.GetMonitorMethod()
 }
 
 // MethodIsEbpf returns if the process monitor method is eBPF.
 func MethodIsEbpf() bool {
-	lock.RLock()
-	defer lock.RUnlock()
-
-	return monitorMethod == MethodEbpf
+	return defaultProcMonStatus.MethodIsEbpf()
 }
 
 // MethodIsAudit returns if the process monitor method is eBPF.
 func MethodIsAudit() bool {
-	lock.RLock()
-	defer lock.RUnlock()
-
-	return monitorMethod == MethodAudit
+	return defaultProcMonStatus.MethodIsAudit()
 }
 
+// MethodIsProc returns if the process monitor method is proc.
 func MethodIsProc() bool {
-	lock.RLock()
-	defer lock.RUnlock()
-
-	return monitorMethod == MethodProc
+	return defaultProcMonStatus.MethodIsProc()
 }

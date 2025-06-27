@@ -47,6 +47,7 @@ import (
 	"github.com/evilsocket/opensnitch/daemon/log/loggers"
 	"github.com/evilsocket/opensnitch/daemon/netfilter"
 	"github.com/evilsocket/opensnitch/daemon/netlink"
+	"github.com/evilsocket/opensnitch/daemon/procmon"
 	"github.com/evilsocket/opensnitch/daemon/procmon/ebpf"
 	"github.com/evilsocket/opensnitch/daemon/procmon/monitor"
 	"github.com/evilsocket/opensnitch/daemon/rule"
@@ -644,7 +645,12 @@ func main() {
 	// the option via command line.
 	if procmonMethod != "" || (ebpfModPath != "" && ebpfModPath != cfg.Ebpf.ModulesPath) {
 		log.Info("Reloading proc monitor (%s) (ebpf mods path: %s)...", procmonMethod, cfg.Ebpf.ModulesPath)
-		if err := monitor.ReconfigureMonitorMethod(procmonMethod, cfg.Ebpf); err != nil {
+		procmonMethodFinal := procmon.StringToMethod(procmonMethod)
+		if procmonMethodFinal == procmon.MethodNone {
+			msg := fmt.Sprintf("Could not match the process monitor method via parameter: %v", procmonMethod)
+			log.Fatal(msg)
+		}
+		if err := monitor.ReconfigureMonitorMethod(procmonMethodFinal, cfg.Ebpf); err != nil {
 			msg := fmt.Sprintf("Unable to set process monitor method via parameter: %v", err)
 			uiClient.SendWarningAlert(msg)
 			log.Warning(msg)

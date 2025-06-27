@@ -49,7 +49,7 @@ func (c *Client) setSocketPath(socketPath string) {
 	c.socketPath = socketPath
 }
 
-func (c *Client) isProcMonitorEqual(newMonitorMethod string) bool {
+func (c *Client) isProcMonitorEqual(newMonitorMethod procmon.Method) bool {
 	c.RLock()
 	defer c.RUnlock()
 
@@ -102,8 +102,9 @@ func (c *Client) loadConfiguration(reload bool, rawConfig []byte) (errf error) {
 	// to avoid ending up running with an empty config.
 	// On reloadConfig we should fall back to a default option if anything fails.
 	c.Lock()
+	defer c.Unlock()
+
 	c.config = newConfig
-	c.Unlock()
 	return errf
 }
 

@@ -115,7 +115,7 @@ func (c *Client) Close() {
 
 // ProcMonitorMethod returns the monitor method configured.
 // If it's not present in the config file, it'll return an empty string.
-func (c *Client) ProcMonitorMethod() string {
+func (c *Client) ProcMonitorMethod() procmon.Method {
 	c.RLock()
 	defer c.RUnlock()
 	return c.config.ProcMonitorMethod
@@ -170,14 +170,14 @@ func (c *Client) Connected() bool {
 	return true
 }
 
-//GetIsAsking returns the isAsking flag
+// GetIsAsking returns the isAsking flag
 func (c *Client) GetIsAsking() bool {
 	c.RLock()
 	defer c.RUnlock()
 	return c.isAsking
 }
 
-//SetIsAsking sets the isAsking flag
+// SetIsAsking sets the isAsking flag
 func (c *Client) SetIsAsking(flag bool) {
 	c.Lock()
 	defer c.Unlock()

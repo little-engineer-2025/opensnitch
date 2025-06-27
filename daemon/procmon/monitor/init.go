@@ -50,7 +50,7 @@ func stopProcMonitors() {
 }
 
 // ReconfigureMonitorMethod configures a new method for parsing connections.
-func ReconfigureMonitorMethod(newMonitorMethod string, ebpfCfg ebpf.Config) *Error {
+func ReconfigureMonitorMethod(newMonitorMethod procmon.Method, ebpfCfg ebpf.Config) *Error {
 	oldMethod := procmon.GetMonitorMethod()
 	if oldMethod == "" {
 		oldMethod = procmon.MethodProc
