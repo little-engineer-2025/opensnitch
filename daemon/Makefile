@@ -19,6 +19,8 @@ install:
 	@install -Dm644 network_aliases.json \
 		-t $(DESTDIR)/etc/opensnitchd/
 	@systemctl daemon-reload
+	@systemctl enable opensnitchd.service
+	@systemctl start opensnitchd.service
 
 opensnitchd: $(SRC)
 	@go get
