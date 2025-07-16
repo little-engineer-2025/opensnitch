@@ -2,6 +2,10 @@
 *.pyc
 *.profile
 
+# Ignore some files in the base directory
+.envrc
+toolbox.sh
+
 # Ignore generated ebpf modules
 ebpf_prog/opensnitch-dns.o
 ebpf_prog/opensnitch-procs.o
@@ -22,3 +26,5 @@ daemon/coverage.out.tmp
 # see: https://doc.qt.io/qt-6/localization.html
 ui/i18n/locales/**/*.qm
 ui/opensnitch/i18n
+
+
